@@ -6,23 +6,35 @@ using std::cin;
 using std::endl;
 using std::string;
 using std::to_string;
+using std::stoi;
 
 void printDay(string dayArray[]){
-    cout << "Day number:  " << dayArray[0] << endl;
-    cout << "Sum:         " << dayArray[1] << endl;
-    cout << "Max:         " << dayArray[2] << endl;
-    cout << "Min:         " << dayArray[3] << endl;
-    cout << "Count:       " << dayArray[4] << endl;
+    cout << "Day number:    " << dayArray[0] << endl;
+    cout << "Sum:           " << dayArray[1] << endl;
+    cout << "Max:           " << dayArray[2] << endl;
+    cout << "Min:           " << dayArray[3] << endl;
+    cout << "Count:         " << dayArray[4] << endl;
 }
 void printWeek(string weekArray[]){
-    cout << "Week number: " << weekArray[0] << endl;
-    cout << "Sum:         " << weekArray[1] << endl;
-    cout << "Max:         " << weekArray[2] << endl;
-    cout << "Min:         " << weekArray[3] << endl;
-    cout << "Count:       " << weekArray[4] << endl;
+    cout << "Week number:   " << weekArray[0] << endl;
+    cout << "Sum:           " << weekArray[1] << endl;
+    cout << "Max:           " << weekArray[2] << endl;
+    cout << "Min:           " << weekArray[3] << endl;
+    cout << "Largest delta: " << weekArray[4] << endl;
+    cout << "Count:         " << weekArray[5] << endl;
 }
 void moveToNextDay(string dayArray[], string weekArray[]){
-    if(dayArray[0] == "7"){
+
+    string curDay = dayArray[0];
+    int curDayInt = stoi(curDay);
+    curDayInt++;
+    curDay = to_string(curDayInt);
+
+    for(int i = 1; i < 4; i++){
+//        cout << dayArray[i] << endl;
+        dayArray[i] = "0.0";
+    }
+    if(curDay == "8"){
         weekArray[0] = "2";
         weekArray[1] = "0.0";
         weekArray[2] = "0.0";
@@ -30,20 +42,10 @@ void moveToNextDay(string dayArray[], string weekArray[]){
         weekArray[4] = "0.0";
         weekArray[5] = "0.0";
         weekArray[6] = "0.0";
+        weekArray[7] = "0.0";
     }
-    dayArray[1] = "0.0";
-    dayArray[2] = "0.0";
-    dayArray[3] = "0.0";
-    dayArray[4] = "0.0";
-    string curDay = dayArray[0];
-    cout << "curday" << curDay << endl;
-    int curDayInt = stoi(curDay);
-    cout << "curdayint" << curDayInt << endl;
-    curDayInt++;
-    cout << "curdayInt" << curDayInt << endl;
-    curDay = to_string(curDayInt);
-    cout << "curday" << curDay << endl;
     dayArray[0] = curDay;
+
 }
 
 //void checkDelta(string weekArray[], string entry){
@@ -61,6 +63,21 @@ void moveToNextDay(string dayArray[], string weekArray[]){
 void addEntry(string dayArray[], string weekArray[], string entry){
     int carryD = 0;
     int carryW = 0;
+
+    string countDayChar = dayArray[4];
+    int countDayInt = stoi(countDayChar);
+    countDayInt++;
+    countDayChar = to_string(countDayInt);
+    dayArray[4] = countDayChar;
+//    cout << dayArray[4] << endl;
+
+    string countWeekChar = weekArray[5];
+    int countWeekInt = stoi(countWeekChar);
+    countWeekInt++;
+    countWeekChar = to_string(countWeekInt);
+    weekArray[5] = countWeekChar;
+    cout << weekArray[5] << endl;
+
     for(long i = 1; i <= entry.length(); i++){
         char currentCharEntry = entry[entry.size() - i];
         char currentCharDayArray = dayArray[1][dayArray[1].size() - i];
@@ -82,7 +99,7 @@ void addEntry(string dayArray[], string weekArray[], string entry){
             dayArray[1][dayArray[1].size() - i] = currentCharDayArray;
             if (carryD == 1 && i == entry.length()) {
                 dayArray[1].insert(0, 1, '0');
-                currentCharDayArray = '0' + charSum;
+                currentCharDayArray = '0' + carryD;
                 dayArray[1][dayArray[1].size() - i - 1] = currentCharDayArray;
             }
         }
@@ -105,7 +122,7 @@ void addEntry(string dayArray[], string weekArray[], string entry){
             weekArray[1][weekArray[1].size() - i] = currentCharWeekArray;
             if (carryW == 1 && i == entry.length()) {
                 weekArray[1].insert(0, 1, '0');
-                currentCharWeekArray = '0' + charSum;
+                currentCharWeekArray = '0' + carryW;
                 weekArray[1][weekArray[1].size() - i - 1] = currentCharWeekArray;
             }
         }
@@ -283,6 +300,7 @@ string inputEntry(string dayArray[], string weekArray[]){
 
     // call next day function
     if (entry == "n" || entry == "N" || entry == "Next") {
+        cout << dayArray[0] << endl;
         moveToNextDay(dayArray, weekArray);
         cout << dayArray[0] << endl;
         if(dayArray[0] == "15"){
@@ -348,11 +366,10 @@ string inputEntry(string dayArray[], string weekArray[]){
 }
 
 int main() {
-    string dayArray[5] = {"7", "0.0", "0.0", "0.0", "0.0"};
-    string weekArray[6] = {"1", "0.0", "0.0", "0.0", "0.0", "0.0"};
+    string dayArray[5] = {"1", "0.0", "0.0", "0.0", "0"};
+    string weekArray[7] = {"1", "0.0", "0.0", "0.0", "0.0", "0", "0.0"};
 
     string entry;
-    cout << entry << endl;
     while(true) {
         entry = inputEntry(dayArray, weekArray);
         if(entry == "-1"){
@@ -365,11 +382,6 @@ int main() {
         if(entry != "0") {
             entry = prepareToAdd(dayArray, weekArray, entry);
             addEntry(dayArray, weekArray, entry);
-            cout << entry << endl;
-            cout << dayArray[0] << endl;
-            cout << dayArray[1] << endl;
-            cout << weekArray[0] << endl;
-            cout << weekArray[1] << endl;
 //            checkMax(dayArray, weekArray, entry);
 //            checkMin(dayArray, weekArray, entry);
 //            checkDelta(weekArray, entry);
