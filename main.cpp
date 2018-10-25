@@ -23,6 +23,7 @@ void printWeek(string weekArray[]){
     cout << "Largest delta: " << weekArray[4] << endl;
     cout << "Count:         " << weekArray[5] << endl;
 }
+
 void moveToNextDay(string dayArray[], string weekArray[]){
 
     string curDay = dayArray[0];
@@ -30,35 +31,440 @@ void moveToNextDay(string dayArray[], string weekArray[]){
     curDayInt++;
     curDay = to_string(curDayInt);
 
-    for(int i = 1; i < 4; i++){
-//        cout << dayArray[i] << endl;
-        dayArray[i] = "0.0";
-    }
+
+    dayArray[1] = "0.0";
+    dayArray[2] = "0.0";
+    dayArray[3] = "0.0";
+    dayArray[4] = "0";
+
     if(curDay == "8"){
         weekArray[0] = "2";
         weekArray[1] = "0.0";
         weekArray[2] = "0.0";
         weekArray[3] = "0.0";
         weekArray[4] = "0.0";
-        weekArray[5] = "0.0";
+        weekArray[5] = "0";
         weekArray[6] = "0.0";
-        weekArray[7] = "0.0";
     }
     dayArray[0] = curDay;
 
 }
 
-//void checkDelta(string weekArray[], string entry){
-//
-//}
-//
-//void checkMax(string dayArray[], string weekArray[], string entry){
-//
-//}
-//
-//void checkMin(string dayArray[], string weekArray[], string entry){
-//
-//}
+void checkDelta(string weekArray[], string entry){
+    long entryBefore = 0;
+    long entryAfter = 0;
+    bool decimalE = false;
+
+    for(unsigned long i = 0; i < entry.length(); i++){
+        char currentCharEntry = entry.at(i);
+
+        if(currentCharEntry == '.'){
+            long curr = entry.length() - entryBefore;
+            decimalE = true;
+            for(unsigned long i = 1; i < curr; i++){
+                entryAfter++;
+            }
+            break;
+        }
+        entryBefore++;
+    }
+
+    if(! decimalE){
+        string temp = entry;
+        temp += ".0";
+        entryAfter = 1;
+        entry = temp;
+    }
+
+    long weekArrayBefore = 0;
+    long weekArrayAfter = 0;
+    for(unsigned long i = 0; i < weekArray[4].length(); i++){
+        char currentCharEntry = weekArray[4].at(i);
+        if(currentCharEntry == '.'){
+            long curr = weekArray[4].length() - weekArrayBefore;
+            for(unsigned long j = 1; j < curr; j++){
+                weekArrayAfter++;
+            }
+            break;
+        }
+        weekArrayBefore++;
+    }
+
+    if(entryBefore == 0){
+        string temp = entry;
+        temp.insert(0, 1, '0');
+        entry = temp;
+        entryBefore++;
+    }
+///////////////////////////////////////////////////////
+
+    if(entryBefore < weekArrayBefore){
+        string temp = entry;
+        for(long i = entryBefore; i < weekArrayBefore; i++){
+            temp.insert(0, 1, '0');
+            entryBefore++;
+        }
+        entry = temp;
+    }
+
+    if(entryBefore > weekArrayBefore){
+        string temp = weekArray[4];
+        for(long i = weekArrayBefore; i < entryBefore; i++){
+            temp.insert(0, 1, '0');
+            weekArrayBefore++;
+        }
+        weekArray[4] = temp;
+    }
+
+    if(entryAfter < weekArrayAfter){
+        string temp = entry;
+        for(long i = entryAfter; i < weekArrayAfter; i++){
+            temp += '0';
+            entryAfter++;
+        }
+        entry = temp;
+    }
+
+    if(entryAfter > weekArrayAfter){
+        string temp = weekArray[4];
+        for(long i = weekArrayAfter; i < entryAfter; i++){
+            temp += '0';
+            weekArrayAfter++;
+        }
+        weekArray[4] = temp;
+    }
+}
+
+void checkMax(string dayArray[], string weekArray[], string entry){
+    long entryBefore = 0;
+    long entryAfter = 0;
+    bool decimalE = false;
+
+    for(unsigned long i = 0; i < entry.length(); i++){
+        char currentCharEntry = entry.at(i);
+
+        if(currentCharEntry == '.'){
+            long curr = entry.length() - entryBefore;
+            decimalE = true;
+            for(unsigned long i = 1; i < curr; i++){
+                entryAfter++;
+            }
+            break;
+        }
+        entryBefore++;
+    }
+
+    if(! decimalE){
+        string temp = entry;
+        temp += ".0";
+        entryAfter = 1;
+        entry = temp;
+    }
+
+    long dayArrayBefore = 0;
+    long dayArrayAfter = 0;
+    for(unsigned long i = 0; i < dayArray[2].length(); i++){
+        char currentCharEntry = dayArray[2].at(i);
+
+        if(currentCharEntry == '.'){
+            long curr = dayArray[2].length() - dayArrayBefore;
+            for(unsigned long j = 1; j < curr; j++){
+                dayArrayAfter++;
+            }
+            break;
+        }
+        dayArrayBefore++;
+    }
+
+
+    long weekArrayBefore = 0;
+    long weekArrayAfter = 0;
+    for(unsigned long i = 0; i < weekArray[2].length(); i++){
+        char currentCharEntry = weekArray[2].at(i);
+        if(currentCharEntry == '.'){
+            long curr = weekArray[2].length() - weekArrayBefore;
+            for(unsigned long j = 1; j < curr; j++){
+                weekArrayAfter++;
+            }
+            break;
+        }
+        weekArrayBefore++;
+    }
+
+    if(entryBefore == 0){
+        string temp = entry;
+        temp.insert(0, 1, '0');
+        entry = temp;
+        entryBefore++;
+    }
+
+    if(entryBefore < dayArrayBefore){
+        string temp = entry;
+        for(long i = entryBefore; i < dayArrayBefore; i++){
+            temp.insert(0, 1, '0');
+            entryBefore++;
+        }
+        entry = temp;
+    }
+
+    if(entryBefore > dayArrayBefore){
+        string temp = dayArray[2];
+        for(long i = dayArrayBefore; i < entryBefore; i++){
+            temp.insert(0, 1, '0');
+            dayArrayBefore++;
+        }
+        dayArray[2] = temp;
+    }
+
+    if(entryAfter < dayArrayAfter){
+        string temp = entry;
+        for(long i = entryAfter; i < dayArrayAfter; i++){
+            temp += '0';
+            entryAfter++;
+        }
+        entry = temp;
+    }
+
+    if(entryAfter > dayArrayAfter){
+        string temp = dayArray[2];
+        for(long i = dayArrayAfter; i < entryAfter; i++){
+            temp += '0';
+            dayArrayAfter++;
+        }
+        dayArray[2] = temp;
+    }
+///////////////////////////////////////////////////////
+
+    if(entryBefore < weekArrayBefore){
+        string temp = entry;
+        for(long i = entryBefore; i < weekArrayBefore; i++){
+            temp.insert(0, 1, '0');
+            entryBefore++;
+        }
+        entry = temp;
+    }
+
+    if(entryBefore > weekArrayBefore){
+        string temp = weekArray[2];
+        for(long i = weekArrayBefore; i < entryBefore; i++){
+            temp.insert(0, 1, '0');
+            weekArrayBefore++;
+        }
+        weekArray[2] = temp;
+    }
+
+    if(entryAfter < weekArrayAfter){
+        string temp = entry;
+        for(long i = entryAfter; i < weekArrayAfter; i++){
+            temp += '0';
+            entryAfter++;
+        }
+        entry = temp;
+    }
+
+    if(entryAfter > weekArrayAfter){
+        string temp = weekArray[2];
+        for(long i = weekArrayAfter; i < entryAfter; i++){
+            temp += '0';
+            weekArrayAfter++;
+        }
+        weekArray[2] = temp;
+    }
+
+    for(long i = 0; i < entry.length(); i++) {
+        char currentCharEntry = entry.at(i);
+        char currentCharDay = dayArray[2].at(i);
+
+        int currentIntEntry = (int)currentCharEntry;
+        int currentIntDay = (int)currentCharDay;
+
+            if (currentIntEntry > currentIntDay) {
+                dayArray[2] = entry;
+                break;
+            }
+    }
+
+    for(long i = 0; i < entry.length(); i++) {
+        char currentCharEntry = entry.at(i);
+        char currentCharWeek = weekArray[2].at(i);
+
+        int currentIntEntry = (int)currentCharEntry;
+        int currentIntWeek = (int)currentCharWeek;
+
+        if(currentIntEntry > currentIntWeek) {
+            weekArray[2] = entry;
+            break;
+        }
+    }
+}
+
+void checkMin(string dayArray[], string weekArray[], string entry){
+    long entryBefore = 0;
+    long entryAfter = 0;
+    bool decimalE = false;
+
+    if(dayArray[0] == "1" && dayArray[4] == "1"){
+        dayArray[3] = entry;
+        weekArray[3] = entry;
+    }
+
+    for(unsigned long i = 0; i < entry.length(); i++){
+        char currentCharEntry = entry.at(i);
+
+        if(currentCharEntry == '.'){
+            long curr = entry.length() - entryBefore;
+            decimalE = true;
+            for(unsigned long i = 1; i < curr; i++){
+                entryAfter++;
+            }
+            break;
+        }
+        entryBefore++;
+    }
+
+    if(! decimalE){
+        string temp = entry;
+        temp += ".0";
+        entryAfter = 1;
+        entry = temp;
+    }
+
+    long dayArrayBefore = 0;
+    long dayArrayAfter = 0;
+    for(unsigned long i = 0; i < dayArray[3].length(); i++){
+        char currentCharEntry = dayArray[3].at(i);
+
+        if(currentCharEntry == '.'){
+            long curr = dayArray[3].length() - dayArrayBefore;
+            for(unsigned long j = 1; j < curr; j++){
+                dayArrayAfter++;
+            }
+            break;
+        }
+        dayArrayBefore++;
+    }
+
+
+    long weekArrayBefore = 0;
+    long weekArrayAfter = 0;
+    for(unsigned long i = 0; i < weekArray[3].length(); i++){
+        char currentCharEntry = weekArray[3].at(i);
+        if(currentCharEntry == '.'){
+            long curr = weekArray[3].length() - weekArrayBefore;
+            for(unsigned long j = 1; j < curr; j++){
+                weekArrayAfter++;
+            }
+            break;
+        }
+        weekArrayBefore++;
+    }
+
+    if(entryBefore == 0){
+        string temp = entry;
+        temp.insert(0, 1, '0');
+        entry = temp;
+        entryBefore++;
+    }
+
+    if(entryBefore < dayArrayBefore){
+        string temp = entry;
+        for(long i = entryBefore; i < dayArrayBefore; i++){
+            temp.insert(0, 1, '0');
+            entryBefore++;
+        }
+        entry = temp;
+    }
+
+    if(entryBefore > dayArrayBefore){
+        string temp = dayArray[3];
+        for(long i = dayArrayBefore; i < entryBefore; i++){
+            temp.insert(0, 1, '0');
+            dayArrayBefore++;
+        }
+        dayArray[3] = temp;
+    }
+
+    if(entryAfter < dayArrayAfter){
+        string temp = entry;
+        for(long i = entryAfter; i < dayArrayAfter; i++){
+            temp += '0';
+            entryAfter++;
+        }
+        entry = temp;
+    }
+
+    if(entryAfter > dayArrayAfter){
+        string temp = dayArray[3];
+        for(long i = dayArrayAfter; i < entryAfter; i++){
+            temp += '0';
+            dayArrayAfter++;
+        }
+        dayArray[3] = temp;
+    }
+///////////////////////////////////////////////////////
+
+    if(entryBefore < weekArrayBefore){
+        string temp = entry;
+        for(long i = entryBefore; i < weekArrayBefore; i++){
+            temp.insert(0, 1, '0');
+            entryBefore++;
+        }
+        entry = temp;
+    }
+
+    if(entryBefore > weekArrayBefore){
+        string temp = weekArray[3];
+        for(long i = weekArrayBefore; i < entryBefore; i++){
+            temp.insert(0, 1, '0');
+            weekArrayBefore++;
+        }
+        weekArray[3] = temp;
+    }
+
+    if(entryAfter < weekArrayAfter){
+        string temp = entry;
+        for(long i = entryAfter; i < weekArrayAfter; i++){
+            temp += '0';
+            entryAfter++;
+        }
+        entry = temp;
+    }
+
+    if(entryAfter > weekArrayAfter){
+        string temp = weekArray[3];
+        for(long i = weekArrayAfter; i < entryAfter; i++){
+            temp += '0';
+            weekArrayAfter++;
+        }
+        weekArray[3] = temp;
+    }
+
+    for(long i = 0; i < entry.length(); i++) {
+        char currentCharEntry = entry.at(i);
+        char currentCharDay = dayArray[3].at(i);
+
+        int currentIntEntry = (int)currentCharEntry;
+        int currentIntDay = (int)currentCharDay;
+
+        if (currentIntEntry < currentIntDay) {
+            dayArray[3] = entry;
+            break;
+        }
+    }
+
+    for(long i = 0; i < entry.length(); i++) {
+        char currentCharEntry = entry.at(i);
+        char currentCharWeek = weekArray[3].at(i);
+
+        int currentIntEntry = (int)currentCharEntry;
+        int currentIntWeek = (int)currentCharWeek;
+
+        if(currentIntEntry < currentIntWeek) {
+            weekArray[3] = entry;
+            break;
+        }
+    }
+}
 
 void addEntry(string dayArray[], string weekArray[], string entry){
     int carryD = 0;
@@ -127,6 +533,7 @@ void addEntry(string dayArray[], string weekArray[], string entry){
             }
         }
     }
+    cout << entry << endl;
 }
 
 string prepareToAdd(string dayArray[], string weekArray[], string entry){
@@ -382,9 +789,9 @@ int main() {
         if(entry != "0") {
             entry = prepareToAdd(dayArray, weekArray, entry);
             addEntry(dayArray, weekArray, entry);
-//            checkMax(dayArray, weekArray, entry);
-//            checkMin(dayArray, weekArray, entry);
-//            checkDelta(weekArray, entry);
+            checkMax(dayArray, weekArray, entry);
+            checkMin(dayArray, weekArray, entry);
+            checkDelta(weekArray, entry);
         }
     }
 }
