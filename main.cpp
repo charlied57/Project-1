@@ -7,36 +7,55 @@ using std::endl;
 using std::string;
 using std::to_string;
 using std::stoi;
+using std::stold;
 
+// Print the values stored in the day array
 void printDay(string dayArray[]){
-    cout << "Day number:    " << dayArray[0] << endl;
-    cout << "Sum:           " << dayArray[1] << endl;
-    cout << "Max:           " << dayArray[2] << endl;
-    cout << "Min:           " << dayArray[3] << endl;
-    cout << "Count:         " << dayArray[4] << endl;
-}
-void printWeek(string weekArray[]){
-    cout << "Week number:   " << weekArray[0] << endl;
-    cout << "Sum:           " << weekArray[1] << endl;
-    cout << "Max:           " << weekArray[2] << endl;
-    cout << "Min:           " << weekArray[3] << endl;
-    cout << "Largest delta: " << weekArray[4] << endl;
-    cout << "Count:         " << weekArray[5] << endl;
+    cout << "Day number-----------: " << dayArray[0] << endl;
+    cout << "Sum------------------: " << dayArray[1] << endl;
+    cout << "Max------------------: " << dayArray[2] << endl;
+    cout << "Min------------------: " << dayArray[3] << endl;
+    cout << "Count----------------: " << dayArray[4] << endl;
 }
 
+// Print the values stored in the week array
+void printWeek(string weekArray[]){
+    cout << "Week number----------: " << weekArray[0] << endl;
+    cout << "Sum------------------: " << weekArray[1] << endl;
+    cout << "Max------------------: " << weekArray[2] << endl;
+    cout << "Min------------------: " << weekArray[3] << endl;
+    cout << "Largest delta on day-: " << weekArray[4] << endl;
+    cout << "Count----------------: " << weekArray[5] << endl;
+}
+
+// This function resets the day array, itterates the day numumber, and if it is moving to the 8th day it resets the
+// week array
 void moveToNextDay(string dayArray[], string weekArray[]){
 
+    // Gets the count of the current day and the last day ans turns them into int's
+    int curCount = stoi(dayArray[4]);
+    int prevCount = stoi(dayArray[5]);
+
+    // Sets the largest delta to the current day if the current count is greater than the prev count
+    int temp = curCount - prevCount;
+    if(temp > 0){
+        weekArray[4] = dayArray[0];
+    }
+
+    // Adds one to the current day
     string curDay = dayArray[0];
     int curDayInt = stoi(curDay);
     curDayInt++;
     curDay = to_string(curDayInt);
 
-
+    // Resets the day array
     dayArray[1] = "0.0";
     dayArray[2] = "0.0";
     dayArray[3] = "0.0";
+    dayArray[5] = dayArray[4];
     dayArray[4] = "0";
 
+    // Resets the week array if the day = 8
     if(curDay == "8"){
         weekArray[0] = "2";
         weekArray[1] = "0.0";
@@ -50,96 +69,14 @@ void moveToNextDay(string dayArray[], string weekArray[]){
 
 }
 
-void checkDelta(string weekArray[], string entry){
-    long entryBefore = 0;
-    long entryAfter = 0;
-    bool decimalE = false;
-
-    for(unsigned long i = 0; i < entry.length(); i++){
-        char currentCharEntry = entry.at(i);
-
-        if(currentCharEntry == '.'){
-            long curr = entry.length() - entryBefore;
-            decimalE = true;
-            for(unsigned long i = 1; i < curr; i++){
-                entryAfter++;
-            }
-            break;
-        }
-        entryBefore++;
-    }
-
-    if(! decimalE){
-        string temp = entry;
-        temp += ".0";
-        entryAfter = 1;
-        entry = temp;
-    }
-
-    long weekArrayBefore = 0;
-    long weekArrayAfter = 0;
-    for(unsigned long i = 0; i < weekArray[4].length(); i++){
-        char currentCharEntry = weekArray[4].at(i);
-        if(currentCharEntry == '.'){
-            long curr = weekArray[4].length() - weekArrayBefore;
-            for(unsigned long j = 1; j < curr; j++){
-                weekArrayAfter++;
-            }
-            break;
-        }
-        weekArrayBefore++;
-    }
-
-    if(entryBefore == 0){
-        string temp = entry;
-        temp.insert(0, 1, '0');
-        entry = temp;
-        entryBefore++;
-    }
-///////////////////////////////////////////////////////
-
-    if(entryBefore < weekArrayBefore){
-        string temp = entry;
-        for(long i = entryBefore; i < weekArrayBefore; i++){
-            temp.insert(0, 1, '0');
-            entryBefore++;
-        }
-        entry = temp;
-    }
-
-    if(entryBefore > weekArrayBefore){
-        string temp = weekArray[4];
-        for(long i = weekArrayBefore; i < entryBefore; i++){
-            temp.insert(0, 1, '0');
-            weekArrayBefore++;
-        }
-        weekArray[4] = temp;
-    }
-
-    if(entryAfter < weekArrayAfter){
-        string temp = entry;
-        for(long i = entryAfter; i < weekArrayAfter; i++){
-            temp += '0';
-            entryAfter++;
-        }
-        entry = temp;
-    }
-
-    if(entryAfter > weekArrayAfter){
-        string temp = weekArray[4];
-        for(long i = weekArrayAfter; i < entryAfter; i++){
-            temp += '0';
-            weekArrayAfter++;
-        }
-        weekArray[4] = temp;
-    }
-}
-
+// This function checks if the value is a a max for the day and the week
 void checkMax(string dayArray[], string weekArray[], string entry){
+    // Lines 75 - 242 ensure the strings ate the same length
     long entryBefore = 0;
     long entryAfter = 0;
     bool decimalE = false;
 
+    // Get entry size before and after decimal
     for(unsigned long i = 0; i < entry.length(); i++){
         char currentCharEntry = entry.at(i);
 
@@ -154,6 +91,7 @@ void checkMax(string dayArray[], string weekArray[], string entry){
         entryBefore++;
     }
 
+    // Check if the entry had a decimal and if not add one
     if(! decimalE){
         string temp = entry;
         temp += ".0";
@@ -161,6 +99,7 @@ void checkMax(string dayArray[], string weekArray[], string entry){
         entry = temp;
     }
 
+    // Get day sum size before and after decimal
     long dayArrayBefore = 0;
     long dayArrayAfter = 0;
     for(unsigned long i = 0; i < dayArray[2].length(); i++){
@@ -176,7 +115,7 @@ void checkMax(string dayArray[], string weekArray[], string entry){
         dayArrayBefore++;
     }
 
-
+    // Get week sum size before and after decimal
     long weekArrayBefore = 0;
     long weekArrayAfter = 0;
     for(unsigned long i = 0; i < weekArray[2].length(); i++){
@@ -191,6 +130,7 @@ void checkMax(string dayArray[], string weekArray[], string entry){
         weekArrayBefore++;
     }
 
+    // If the number starts with a decimal add a 0 to the front
     if(entryBefore == 0){
         string temp = entry;
         temp.insert(0, 1, '0');
@@ -198,6 +138,7 @@ void checkMax(string dayArray[], string weekArray[], string entry){
         entryBefore++;
     }
 
+    // The next 8 if statements add 0's the the front and rear of the strings to make sure they are the same size
     if(entryBefore < dayArrayBefore){
         string temp = entry;
         for(long i = entryBefore; i < dayArrayBefore; i++){
@@ -271,6 +212,7 @@ void checkMax(string dayArray[], string weekArray[], string entry){
         weekArray[2] = temp;
     }
 
+    // Checks if the entry is greater than the day max
     for(long i = 0; i < entry.length(); i++) {
         char currentCharEntry = entry.at(i);
         char currentCharDay = dayArray[2].at(i);
@@ -284,6 +226,7 @@ void checkMax(string dayArray[], string weekArray[], string entry){
             }
     }
 
+    // Checks if the entry is greater than the week max
     for(long i = 0; i < entry.length(); i++) {
         char currentCharEntry = entry.at(i);
         char currentCharWeek = weekArray[2].at(i);
@@ -298,12 +241,15 @@ void checkMax(string dayArray[], string weekArray[], string entry){
     }
 }
 
+// This function checks if the value is a a min for the day and the week
 void checkMin(string dayArray[], string weekArray[], string entry){
+    // Everything doen to line 386 is commented in check min function
+
     long entryBefore = 0;
     long entryAfter = 0;
     bool decimalE = false;
 
-    if(dayArray[0] == "1" && dayArray[4] == "1"){
+    if(dayArray[4] == "1"){
         dayArray[3] = entry;
         weekArray[3] = entry;
     }
@@ -439,6 +385,7 @@ void checkMin(string dayArray[], string weekArray[], string entry){
         weekArray[3] = temp;
     }
 
+    // Checks if the entry is less than the day min
     for(long i = 0; i < entry.length(); i++) {
         char currentCharEntry = entry.at(i);
         char currentCharDay = dayArray[3].at(i);
@@ -452,6 +399,7 @@ void checkMin(string dayArray[], string weekArray[], string entry){
         }
     }
 
+    // Checks if the entry is less than the week min
     for(long i = 0; i < entry.length(); i++) {
         char currentCharEntry = entry.at(i);
         char currentCharWeek = weekArray[3].at(i);
@@ -466,6 +414,7 @@ void checkMin(string dayArray[], string weekArray[], string entry){
     }
 }
 
+// This function does string addition.
 void addEntry(string dayArray[], string weekArray[], string entry){
     int carryD = 0;
     int carryW = 0;
@@ -475,23 +424,25 @@ void addEntry(string dayArray[], string weekArray[], string entry){
     countDayInt++;
     countDayChar = to_string(countDayInt);
     dayArray[4] = countDayChar;
-//    cout << dayArray[4] << endl;
 
     string countWeekChar = weekArray[5];
     int countWeekInt = stoi(countWeekChar);
     countWeekInt++;
     countWeekChar = to_string(countWeekInt);
     weekArray[5] = countWeekChar;
-    cout << weekArray[5] << endl;
 
     for(long i = 1; i <= entry.length(); i++){
+        // Gets the current char in entry and day sum
         char currentCharEntry = entry[entry.size() - i];
         char currentCharDayArray = dayArray[1][dayArray[1].size() - i];
 
+        // Add if not a decimal
         if(currentCharEntry != '.') {
+            // Turn current char's to int's
             int entryChar = (int) currentCharEntry - 48;
             int dayArrayChar = (int) currentCharDayArray - 48;
 
+            // Add int's and check if it carry's
             int charSum = entryChar + dayArrayChar + carryD;
             if (charSum > 9) {
                 carryD = 1;
@@ -501,8 +452,10 @@ void addEntry(string dayArray[], string weekArray[], string entry){
                 carryD = 0;
             }
 
+            // Turn int back into char
             currentCharDayArray = '0' + charSum;
             dayArray[1][dayArray[1].size() - i] = currentCharDayArray;
+            // Insert char into string and save into day array
             if (carryD == 1 && i == entry.length()) {
                 dayArray[1].insert(0, 1, '0');
                 currentCharDayArray = '0' + carryD;
@@ -510,6 +463,7 @@ void addEntry(string dayArray[], string weekArray[], string entry){
             }
         }
 
+        // Does the same thing as the code above but for the week array
         char currentCharWeekArray = weekArray[1][weekArray[1].size() - i];
         if(currentCharEntry != '.') {
             int entryChar = (int) currentCharEntry - 48;
@@ -533,10 +487,11 @@ void addEntry(string dayArray[], string weekArray[], string entry){
             }
         }
     }
-    cout << entry << endl;
 }
 
+// This function endures that the strings are the same length
 string prepareToAdd(string dayArray[], string weekArray[], string entry){
+    // everything in this function is commented in checkMax function
     long entryBefore = 0;
     long entryAfter = 0;
     bool decimalE = false;
@@ -577,11 +532,6 @@ string prepareToAdd(string dayArray[], string weekArray[], string entry){
         dayArrayBefore++;
     }
 
-    if(weekArray[0] == "2"){
-        int x = 2;
-    }
-
-
     long weekArrayBefore = 0;
     long weekArrayAfter = 0;
     for(unsigned long i = 0; i < weekArray[x].length(); i++){
@@ -601,6 +551,42 @@ string prepareToAdd(string dayArray[], string weekArray[], string entry){
         temp.insert(0, 1, '0');
         entry = temp;
         entryBefore++;
+    }
+
+    if(entryBefore < weekArrayBefore){
+        string temp = entry;
+        for(long i = entryBefore; i < weekArrayBefore; i++){
+            temp.insert(0, 1, '0');
+            entryBefore++;
+        }
+        entry = temp;
+    }
+
+    if(entryBefore > weekArrayBefore){
+        string temp = weekArray[x];
+        for(long i = weekArrayBefore; i < entryBefore; i++){
+            temp.insert(0, 1, '0');
+            weekArrayBefore++;
+        }
+        weekArray[x] = temp;
+    }
+
+    if(entryAfter < weekArrayAfter){
+        string temp = entry;
+        for(long i = entryAfter; i < weekArrayAfter; i++){
+            temp += '0';
+            entryAfter++;
+        }
+        entry = temp;
+    }
+
+    if(entryAfter > weekArrayAfter){
+        string temp = weekArray[x];
+        for(long i = weekArrayAfter; i < entryAfter; i++){
+            temp += '0';
+            weekArrayAfter++;
+        }
+        weekArray[x] = temp;
     }
 
     if(entryBefore < dayArrayBefore){
@@ -640,49 +626,14 @@ string prepareToAdd(string dayArray[], string weekArray[], string entry){
     }
 ///////////////////////////////////////////////////////
 
-    if(entryBefore < weekArrayBefore){
-        string temp = entry;
-        for(long i = entryBefore; i < weekArrayBefore; i++){
-            temp.insert(0, 1, '0');
-            entryBefore++;
-        }
-        entry = temp;
-    }
-
-    if(entryBefore > weekArrayBefore){
-        string temp = weekArray[x];
-        for(long i = weekArrayBefore; i < entryBefore; i++){
-            temp.insert(0, 1, '0');
-            weekArrayBefore++;
-        }
-        weekArray[x] = temp;
-    }
-
-    if(entryAfter < weekArrayAfter){
-        string temp = entry;
-        for(long i = entryAfter; i < weekArrayAfter; i++){
-            temp += '0';
-            entryAfter++;
-        }
-        entry = temp;
-    }
-
-    if(entryAfter > weekArrayAfter){
-        string temp = weekArray[x];
-        for(long i = weekArrayAfter; i < entryAfter; i++){
-            temp += '0';
-            weekArrayAfter++;
-        }
-        weekArray[x] = temp;
-    }
-
     return entry;
 }
 
+// This function makes sure the input is a positive real number
 string inputEntry(string dayArray[], string weekArray[]){
     // Gets a input from the user ans stores it as a string
     string entry;
-    cout << "Input a value of only digits, may contain a decimal" << endl << ">> ";
+    cout << "Input >> ";
     getline(cin, entry);
 
     // Base cases
@@ -707,9 +658,7 @@ string inputEntry(string dayArray[], string weekArray[]){
 
     // call next day function
     if (entry == "n" || entry == "N" || entry == "Next") {
-        cout << dayArray[0] << endl;
         moveToNextDay(dayArray, weekArray);
-        cout << dayArray[0] << endl;
         if(dayArray[0] == "15"){
             return "-2";
         }
@@ -772,26 +721,31 @@ string inputEntry(string dayArray[], string weekArray[]){
     return entry;
 }
 
+// The main function
 int main() {
-    string dayArray[5] = {"1", "0.0", "0.0", "0.0", "0"};
+    // Initialize arrays
+    string dayArray[6] = {"1", "0.0", "0.0", "0.0", "0", "0"};
     string weekArray[7] = {"1", "0.0", "0.0", "0.0", "0.0", "0", "0.0"};
 
     string entry;
+    // Always run
     while(true) {
         entry = inputEntry(dayArray, weekArray);
+        // Terminate if exit signal is entered
         if(entry == "-1"){
             return 0;
         }
+        // Exit when 14 days have padded
         if(entry == "-2"){
             cout << "Day storage full, Goodbye.";
             return 0;
         }
+        // Run the real meaty part is the input is valid
         if(entry != "0") {
             entry = prepareToAdd(dayArray, weekArray, entry);
             addEntry(dayArray, weekArray, entry);
             checkMax(dayArray, weekArray, entry);
             checkMin(dayArray, weekArray, entry);
-            checkDelta(weekArray, entry);
         }
     }
 }
